@@ -13,6 +13,7 @@ tmp.*
 temp.*
 *.tmp
 *.temp
+/app
 
 # Logs
 logs
