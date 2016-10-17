@@ -9,7 +9,7 @@ insert_final_new_line = true
 charset = utf-8
 
 # tab
-[*.{js,sh,json,md,{c,h}{,pp,xx},cc,hh,{c,le,sa}ss,{x,y,ht}ml}]
+[*.{js,sh,json,md,{c,h}{,pp,xx},cc,hh,{c,le,sa}ss,{x,y,ht}ml,coffee,cson}]
 indent_style = space
 indent_size = 2
 
@@ -20,5 +20,5 @@ end_of_line = lf
 end_of_line = crlf
 
 # Trailing White Space
-[*.{js,sh,json,md,{c,h}{,pp,xx},cc,hh,{c,le,sa}ss,{x,y,ht}ml}]
+[*.{js,sh,json,md,{c,h}{,pp,xx},cc,hh,{c,le,sa}ss,{x,y,ht}ml,coffee,cson}]
 trim_trailing_whitespace = true
