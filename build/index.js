@@ -4,8 +4,8 @@ const {join, dirname} = require('path')
 const {exit} = require('process')
 const {writeFile, readFile, mkdir} = require('fs-promise')
 const co = require('co')
-const rmfs = require('./lib/remove-fs.js')
-const tvfs = require('./lib/traverse-fs.js')
+const {remove} = require('./lib/remove-fs.js')
+const {traverse} = require('./lib/traverse-fs.js')
 const {info, error} = global.console
 const PROJECT_DIR = dirname(__dirname)
 const SRC_DIR = join(PROJECT_DIR, 'src')
@@ -27,17 +27,19 @@ co(main)
   )
 
 function * main () {
-  yield rmfs(APP_DIR)
-  yield tvfs(SRC_DIR)
+  yield remove(APP_DIR)
+  yield traverse(SRC_DIR)
     .before(
-      function * ({subdir}) {
-        const appdir = join(APP_DIR, subdir)
-        yield mkdir(appdir)
-        return Promise.resolve(appdir)
+      function * ({path, is}) {
+        if (is === 'dir') {
+          const appdir = join(APP_DIR, path)
+          yield mkdir(appdir)
+          return Promise.resolve(appdir)
+        }
       }
     )
     .after(
-      function * ({name, ext, base, file, before: appdir}) {
+      function * ({name, ext, base, file}, {path: appdir}) {
         const {build, ext: appext = ''} = require(ext)
         const srcbuffer = yield readFile(file)
         const appbuffer = yield build(srcbuffer)
