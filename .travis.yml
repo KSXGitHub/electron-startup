@@ -16,4 +16,3 @@ before_install:
 before_script:
   - chmod -R +x sh
   - export SKIP_START_APP=TRUE
-  - export USE_XVFB=TRUE
