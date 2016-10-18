@@ -12,26 +12,32 @@ const getis = (attr, path) => {
   throw new CategoryError('Unreconizable FS entry', {attr, path})
 }
 
-const traverse = (path, pre = YIELD_RESOLVE_NOTHING, post = YIELD_RESOLVE_NOTHING, container = {}) => ({
+const traverse = (path, pre = YIELD_RESOLVE_NOTHING, main = YIELD_RESOLVE_NOTHING, post = YIELD_RESOLVE_NOTHING, {actualPath: parentActualPath = ''} = {}) => ({
   path: path =>
-    traverse(path, pre, post, container),
+    traverse(path, pre, main, post, container),
   before: pre =>
-    traverse(path, pre, post, container),
+    traverse(path, pre, main, post, container),
+  main: pre =>
+    traverse(path, pre, main, post, container),
   after: post =>
-    traverse(path, pre, post, container),
+    traverse(path, pre, main, post, container),
   container: container =>
-    traverse(path, pre, post, container),
+    traverse(path, pre, main, post, container),
   get: () => co(function * () {
     const {name, ext, base, dir} = parse(path)
+    const actualPath = join(parentActualPath, path)
     const attr = yield stat(path)
     const is = getis(attr, path)
     let con = true
     const prevent = () => { con = false }
-    const nextcontainer = {path, name, ext, base, dir, is, container, prevent}
+    const nextcontainer = {path, name, ext, base, dir, is, actualPath, {actualPath: parentActualPath}, prevent}
     const before = yield pre(nextcontainer)
-    if (is === 'dir' && con) {
-      const list = yield readdir(path)
-      yield Promise.all(
+    let center
+    if (is === 'file') {
+      center = yield main(nextcontainer)
+    } else if (con) {
+      const list = yield readdir(parentActualPath)
+      center = yield Promise.all(
         list
           .map(
             item =>
@@ -39,12 +45,12 @@ const traverse = (path, pre = YIELD_RESOLVE_NOTHING, post = YIELD_RESOLVE_NOTHIN
           )
           .map(
             path =>
-              traverse(path, pre, post, nextcontainer).get()
+              traverse(path, pre, main, post, nextcontainer).get()
           )
       )
     }
     const after = yield post(nextcontainer, before)
-    return after
+    return Promise.resolve({before, center, after})
   }),
   __proto__: null
 })

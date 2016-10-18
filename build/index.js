@@ -38,10 +38,10 @@ function * main () {
         }
       }
     )
-    .after(
-      function * ({name, ext, base, file}, appdir) {
+    .main(
+      function * ({name, ext, base, actualPath}, appdir) {
         const {build, ext: appext = ''} = require(ext)
-        const srcbuffer = yield readFile(file)
+        const srcbuffer = yield readFile(actualPath)
         const appbuffer = yield build(srcbuffer)
         const appfile = join(appdir, name + appext)
         yield writeFile(appfile, appbuffer)
