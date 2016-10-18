@@ -19,9 +19,9 @@ co(main)
     }
   )
   .catch(
-    error => {
+    reason => {
       error('Build failed.')
-      info(error)
+      info(reason)
       exit(1)
     }
   )
