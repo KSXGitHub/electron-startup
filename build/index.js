@@ -2,7 +2,7 @@
 
 const {join, dirname, parse} = require('path')
 const {exit} = require('process')
-const {writeFile, readFile, mkdir, readdir} = require('fs-promise')
+const {writeFile, readFile, mkdir, readdir, stat} = require('fs-promise')
 const {remove} = require('fs-extra')
 const co = require('co')
 const {info, error} = global.console
@@ -41,20 +41,26 @@ function * main () {
   )
   yield co(() => traverse(SRC_DIR, APP_DIR))
   function * traverse (src, app) {
-    const attr = stat(src)
+    const attr = yield stat(src)
     if (attr.isFile()) {
-      const {ext, name} = parse(sffx)
-      const compile = require(join(__dirname, ext + '.js'))
-      const srcbuffer = readFile(src)
-      const appbuffer = compile(srcbuffer)
-      return writeFile(app, appbuffer)
+      const {ext, name} = parse(src)
+      const {dir: appdir} = parse(app)
+      const compile = require(join(__dirname, 'plugin', ext + '.js'))
+      const srcbuffer = yield readFile(src)
+      const {buffer: appbuffer, ext: appext} = compile(srcbuffer)
+      return writeFile(join(appdir, name + appext), appbuffer)
     }
     if (attr.isDirectory()) {
+      try {
+        yield mkdir(app)
+      } catch (error) {}
       const list = yield readdir(src)
       return Promise.all(
-        list.map(
-          item => traverse(join(src, item), join(app, item))
-        )
+        list
+          .map(
+            item => () => traverse(join(src, item), join(app, item))
+          )
+          .map(co)
       )
     }
   }
