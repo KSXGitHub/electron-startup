@@ -13,6 +13,8 @@
     "clean": "bash -c './sh/clean.sh'",
     "fix": "bash -c './sh/fix.sh'",
     "test": "bash -c './sh/test.sh'",
-    "quick-test": "bash -c './sh/quick-test.sh'"
+    "quick-test": "bash -c './sh/quick-test.sh'",
+    "build": "bash -c './sh/build.sh'",
+    "start": "electron ./app"
   }
 }

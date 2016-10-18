@@ -8,4 +8,12 @@
     cat stdout.tmp
     exit 2
   )
+) && (
+  echo "Building..."
+  npm run build
+) && (
+  [[ -z "$SKIP_START_APP" ]] || (
+    echo "Starting application..."
+    npm start
+  )
 )
