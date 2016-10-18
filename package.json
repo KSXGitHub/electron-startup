@@ -5,7 +5,8 @@
   "devDependencies": {
     "standard": "8.0.0",
     "electron-prebuilt": "^1.4.3",
-    "coffee-script": "^1.11.1"
+    "coffee-script": "^1.11.1",
+    "pug": "^2.0.0-beta"
   },
   "scripts": {
     "remake-package-json": "node sh/remake-package-json",
