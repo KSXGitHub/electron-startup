@@ -6,7 +6,6 @@ const {writeFile, readFile, mkdir} = require('fs-promise')
 const co = require('co')
 const {remove} = require('./lib/remove-fs.js')
 const {traverse} = require('./lib/traverse-fs.js')
-const {RESOLVE_NOTHING} = require('./lib/yield-resolve-nothing.js')
 const {info, error} = global.console
 const PROJECT_DIR = dirname(__dirname)
 const SRC_DIR = join(PROJECT_DIR, 'src')
