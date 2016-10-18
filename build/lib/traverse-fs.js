@@ -12,7 +12,7 @@ const getis = (attr, path) => {
   throw new CategoryError('Unreconizable FS entry', {attr, path})
 }
 
-const traverse = (path, pre = YIELD_RESOLVE_NOTHING, main = YIELD_RESOLVE_NOTHING, post = YIELD_RESOLVE_NOTHING, {actualPath: parentActualPath = ''} = {}) => ({
+const traverse = (path, pre = YIELD_RESOLVE_NOTHING, main = YIELD_RESOLVE_NOTHING, post = YIELD_RESOLVE_NOTHING, container = {}) => ({
   path: path =>
     traverse(path, pre, main, post, container),
   before: pre =>
@@ -25,12 +25,12 @@ const traverse = (path, pre = YIELD_RESOLVE_NOTHING, main = YIELD_RESOLVE_NOTHIN
     traverse(path, pre, main, post, container),
   get: () => co(function * () {
     const {name, ext, base, dir} = parse(path)
+    const {actualPath: parentActualPath = ''} = container
     const actualPath = join(parentActualPath, path)
     const attr = yield stat(path)
     const is = getis(attr, path)
     let con = true
     const prevent = () => { con = false }
-    const container = {actualPath: parentActualPath}
     const nextcontainer = {path, name, ext, base, dir, is, actualPath, container, prevent}
     const before = yield pre(nextcontainer)
     let center
