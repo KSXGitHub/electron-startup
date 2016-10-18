@@ -1,5 +1,5 @@
 'use strict'
-const pretty = require('process').env.RELEASE_MODE === 'TRUE'
+const pretty = require('process').env.RELEASE_MODE !== 'TRUE' && '  '
 const pug = require('pug')
 const ext = '.xml'
 const compile = buffer => {
