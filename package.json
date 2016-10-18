@@ -4,13 +4,20 @@
   "author": "Hoàng Văn Khải <hvksmr1996@gmail.com>",
   "devDependencies": {
     "standard": "8.0.0",
-    "electron-prebuilt": "^1.4.3"
+    "electron": "^1.4.3",
+    "coffee-script": "^1.11.1",
+    "pug": "^2.0.0-beta",
+    "co": "^4.6.0",
+    "fs-promise": "^0.5.0",
+    "fs-extra": "^0.30.0"
   },
   "scripts": {
     "remake-package-json": "node sh/remake-package-json",
     "clean": "bash -c './sh/clean.sh'",
     "fix": "bash -c './sh/fix.sh'",
     "test": "bash -c './sh/test.sh'",
-    "quick-test": "bash -c './sh/quick-test.sh'"
+    "quick-test": "bash -c './sh/quick-test.sh'",
+    "build": "bash -c './sh/build.sh'",
+    "start": "electron ./app"
   }
 }

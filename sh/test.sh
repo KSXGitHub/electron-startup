@@ -8,4 +8,15 @@
     cat stdout.tmp
     exit 2
   )
+) && (
+  echo "Testing..."
+  node ./test
+) && (
+  echo "Building..."
+  npm run build
+) && (
+  [[ "$SKIP_QUICK_TEST" == 'TRUE' ]] || (
+    echo "Starting application..."
+    npm run quick-test
+  )
 )
