@@ -15,7 +15,7 @@
   echo "Building..."
   npm run build
 ) && (
-  [[ "$SKIP_START_APP" == 'TRUE' ]] || (
+  [[ "$SKIP_START_APP" != 'TRUE' ]] || (
     echo "Starting application..."
     npm start
   )
