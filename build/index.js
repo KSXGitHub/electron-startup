@@ -13,10 +13,17 @@ const APP_DIR = join(PROJECT_DIR, 'app')
 
 co(main)
   .then(
-    () => exit(0)
+    () => {
+      info('Build succeed.')
+      exit(0)
+    }
   )
   .catch(
-    () => exit(1)
+    error => {
+      error('Build failed.')
+      info(error)
+      exit(1)
+    }
   )
 
 function * main () {
