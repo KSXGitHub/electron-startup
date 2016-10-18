@@ -9,6 +9,9 @@
     exit 2
   )
 ) && (
+  echo "Testing..."
+  node ./test
+) && (
   echo "Building..."
   npm run build
 ) && (
