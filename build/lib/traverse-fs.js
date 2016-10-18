@@ -30,7 +30,8 @@ const traverse = (path, pre = YIELD_RESOLVE_NOTHING, main = YIELD_RESOLVE_NOTHIN
     const is = getis(attr, path)
     let con = true
     const prevent = () => { con = false }
-    const nextcontainer = {path, name, ext, base, dir, is, actualPath, {actualPath: parentActualPath}, prevent}
+    const container = {actualPath: parentActualPath}
+    const nextcontainer = {path, name, ext, base, dir, is, actualPath, container, prevent}
     const before = yield pre(nextcontainer)
     let center
     if (is === 'file') {
