@@ -11,7 +11,7 @@ function createWindow () {
   win = new BrowserWindow({
     autoHideMenuBar: true
   })
-  win.on('closed', () => win = null)
+  win.on('closed', () => { win = null })
   win.on('ready-to-show', () => win.show())
   win.focus()
 }
