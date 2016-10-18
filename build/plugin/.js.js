@@ -1,1 +1,2 @@
-module.exports = x => x
+const ext = '.js'
+module.exports = buffer => ({buffer, ext})
