@@ -28,7 +28,7 @@ const traverse = (path, pre = YIELD_RESOLVE_NOTHING, post = YIELD_RESOLVE_NOTHIN
     const is = getis(attr, path)
     const nextcontainer = {path, name, ext, base, dir, is}
     let con = true
-    const before = yield pre(nextcontainer, {container, prevent: () => { con = false } })
+    const before = yield pre(nextcontainer, {container, prevent: () => { con = false }})
     if (is === 'dir' && con) {
       const list = yield readdir(path)
       yield Promise.all(
@@ -48,6 +48,5 @@ const traverse = (path, pre = YIELD_RESOLVE_NOTHING, post = YIELD_RESOLVE_NOTHIN
   }),
   __proto__: null
 })
-
 
 module.exports = {traverse}
