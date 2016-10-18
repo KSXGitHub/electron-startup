@@ -2,7 +2,7 @@
 
 const {join} = require('path')
 const {app, BrowserWindow} = require('electron')
-const location = join(__dirname, 'page', 'index.xml')
+const location = join('file:///', __dirname, 'page', 'index.xml')
 
 app.on('ready', createWindow)
 app.on('activate', () => win || createWindow())
