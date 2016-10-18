@@ -27,26 +27,29 @@ co(main)
   )
 
 function * main () {
-  yield remove(APP_DIR)
-  yield traverse(SRC_DIR)
-    .before(
-      function * ({path, base, is, prevent}) {
-        if (is === 'dir') {
-          const appdir = join(APP_DIR, path)
-          yield mkdir(appdir)
-          return Promise.resolve(appdir)
+  try {
+    yield remove(APP_DIR)
+  } finally {
+    yield traverse(SRC_DIR)
+      .before(
+        function * ({path, base, is, prevent}) {
+          if (is === 'dir') {
+            const appdir = join(APP_DIR, path)
+            yield mkdir(appdir)
+            return Promise.resolve(appdir)
+          }
         }
-      }
-    )
-    .main(
-      function * ({name, ext, base, actualPath}, appdir) {
-        const {build, ext: appext = ''} = require(ext)
-        const srcbuffer = yield readFile(actualPath)
-        const appbuffer = yield build(srcbuffer)
-        const appfile = join(appdir, name + appext)
-        yield writeFile(appfile, appbuffer)
-        return Promise.resolve(appfile)
-      }
-    )
-    .get()
+      )
+      .main(
+        function * ({name, ext, base, actualPath}, appdir) {
+          const {build, ext: appext = ''} = require(ext)
+          const srcbuffer = yield readFile(actualPath)
+          const appbuffer = yield build(srcbuffer)
+          const appfile = join(appdir, name + appext)
+          yield writeFile(appfile, appbuffer)
+          return Promise.resolve(appfile)
+        }
+      )
+      .get()
+  }
 }
