@@ -27,7 +27,7 @@ const traverse = (path, pre = YIELD_RESOLVE_NOTHING, main = YIELD_RESOLVE_NOTHIN
     const {name, ext, base, dir} = parse(path)
     const {actualPath: parentActualPath = ''} = container
     const actualPath = join(parentActualPath, path)
-    const attr = yield stat(path)
+    const attr = yield stat(actualPath)
     const is = getis(attr, path)
     let con = true
     const prevent = () => { con = false }
