@@ -5,5 +5,5 @@ node_js:
   - '6'
 
 before_script:
-  - chmod +x sh/*
+  - chmod -R +x sh
   - export SKIP_START_APP=TRUE
