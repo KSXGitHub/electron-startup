@@ -6,10 +6,12 @@ const {writeFile, readFile, mkdir} = require('fs-promise')
 const co = require('co')
 const {remove} = require('./lib/remove-fs.js')
 const {traverse} = require('./lib/traverse-fs.js')
+const {RESOLVE_NOTHING} = require('./lib/yield-resolve-nothing.js')
 const {info, error} = global.console
 const PROJECT_DIR = dirname(__dirname)
 const SRC_DIR = join(PROJECT_DIR, 'src')
 const APP_DIR = join(PROJECT_DIR, 'app')
+const ignore = new Set(['node_modules', '.node_modules', '.node_libraries'])
 
 co(main)
   .then(
@@ -30,7 +32,11 @@ function * main () {
   yield remove(APP_DIR)
   yield traverse(SRC_DIR)
     .before(
-      function * ({path, is}) {
+      function * ({path, base, is, prevent}) {
+        if (ignore.has(base)) {
+          prevent()
+          return RESOLVE_NOTHING
+        }
         if (is === 'dir') {
           const appdir = join(APP_DIR, path)
           yield mkdir(appdir)
@@ -39,7 +45,7 @@ function * main () {
       }
     )
     .after(
-      function * ({name, ext, base, file}, {path: appdir}) {
+      function * ({name, ext, base, file}, appdir) {
         const {build, ext: appext = ''} = require(ext)
         const srcbuffer = yield readFile(file)
         const appbuffer = yield build(srcbuffer)

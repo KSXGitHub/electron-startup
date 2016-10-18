@@ -2,10 +2,9 @@
 
 const {join, parse} = require('path')
 const {readdir, stat} = require('fs-promise')
-const {CategoryError} = require('./error.js')
 const co = require('co')
-const RESOLVE_NOTHING = Promise.resolve()
-const YIELD_RESOLVE_NOTHING = function * () { yield RESOLVE_NOTHING }
+const {CategoryError} = require('./error.js')
+const {YIELD_RESOLVE_NOTHING} = require('./yield-resolve-nothing.js')
 
 const getis = (attr, path) => {
   if (attr.isDirectory()) return 'dir'
@@ -26,9 +25,10 @@ const traverse = (path, pre = YIELD_RESOLVE_NOTHING, post = YIELD_RESOLVE_NOTHIN
     const {name, ext, base, dir} = parse(path)
     const attr = yield stat(path)
     const is = getis(attr, path)
-    const nextcontainer = {path, name, ext, base, dir, is}
     let con = true
-    const before = yield pre(nextcontainer, {container, prevent: () => { con = false }})
+    const prevent = () => { con = false }
+    const nextcontainer = {path, name, ext, base, dir, is, container, prevent}
+    const before = yield pre(nextcontainer)
     if (is === 'dir' && con) {
       const list = yield readdir(path)
       yield Promise.all(
@@ -43,7 +43,7 @@ const traverse = (path, pre = YIELD_RESOLVE_NOTHING, post = YIELD_RESOLVE_NOTHIN
           )
       )
     }
-    const after = yield post(nextcontainer, {container, before})
+    const after = yield post(nextcontainer, before)
     return after
   }),
   __proto__: null
