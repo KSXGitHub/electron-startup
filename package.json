@@ -4,7 +4,7 @@
   "author": "Hoàng Văn Khải <hvksmr1996@gmail.com>",
   "devDependencies": {
     "standard": "8.0.0",
-    "electron-prebuilt": "^1.4.3",
+    "electron": "^1.4.3",
     "coffee-script": "^1.11.1",
     "pug": "^2.0.0-beta",
     "co": "^4.6.0",
